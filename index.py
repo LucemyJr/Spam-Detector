@@ -30,7 +30,7 @@ messages.drop(['Unnamed: 2','Unnamed: 3','Unnamed: 4'], axis=1, inplace=True) # 
 messages = messages.rename(columns={'v1': 'tipo','v2': 'mensagem'})
 
 # Imprime tudo, no caso todas as linhas do arquivo csv
-#print(messages.to_string())
+# print(messages.to_string())
 
 # Exibe count (total de mensagens), quantas são únicas (ou seja, tem valores repetidos)
 # top (a mensagem que mais se repete) e freq (quantas vezes a mensagem top repete)
@@ -57,13 +57,27 @@ pipeline = Pipeline([
     ('classifier', MultinomialNB()) # 'classifier' (Classificador): Treina esses vetores no classificador naive bayes
 ])
 
-# msg_test.iloc[0] = "Free entry in 2 a wkly comp to win FA Cup final tkts 21st May 2005. Text FA to 87121 to receive entry question(std txt rate)T&C's apply 08452810075over18's"
 
 pipeline.fit(msg_train, class_train)
 
 preditions = pipeline.predict(msg_test)
 
-# Exibe todas as mensagens marcadas como "spam"
+## Exibe todas as mensagens consideradas SPAM
 
-print(classification_report(class_test, preditions))
+# Cria uma máscara booleana que é True para todas as linhas em que o valor na coluna 'tipo' é igual a 'spam'
+# e filtra o Dataframe Messages incluindo so o que é TRUE
+
+print("Mensagens Spam:")
+print(messages[messages['tipo'] == 'spam']['mensagem'].to_string(index=False)) 
+
+## Exibe apenas as mensagens consideradas HAM (não SPAM)
+
+# Cria uma máscara booleana que é True para todas as linhas em que o valor na coluna 'tipo' é igual a 'ham'
+# e filtra o Dataframe Messages incluindo so o que é TRUE
+
+print("\nMensagens Ham (não spam):")
+print(messages[messages['tipo'] == 'ham']['mensagem'].to_string(index=False))
+
+
+# print(classification_report(class_test, preditions))
 
